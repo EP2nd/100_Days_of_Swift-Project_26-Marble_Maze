@@ -34,20 +34,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     var isGameOver = false
+    // Challenge 2:
+    var currentLevel = 1
     
     override func didMove(to view: SKView) {
-        let background = SKSpriteNode(imageNamed: "background.jpg")
-        background.position = CGPoint(x: 512, y: 384)
-        background.blendMode = .replace
-        background.zPosition = -1
-        addChild(background)
-        
-        scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
-        scoreLabel.text = "Score: 0"
-        scoreLabel.horizontalAlignmentMode = .left
-        scoreLabel.position = CGPoint(x: 16, y: 16)
-        scoreLabel.zPosition = 2
-        addChild(scoreLabel)
+        setEnvironment()
         
         physicsWorld.gravity = .zero
         physicsWorld.contactDelegate = self
@@ -94,12 +85,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         #endif
     }
     
+    func setEnvironment() {
+        let background = SKSpriteNode(imageNamed: "background.jpg")
+        background.name = "background"
+        background.position = CGPoint(x: 512, y: 384)
+        background.blendMode = .replace
+        background.zPosition = -1
+        addChild(background)
+        
+        scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
+        scoreLabel.name = "scoreLabel"
+        scoreLabel.text = "Score: \(score)"
+        scoreLabel.horizontalAlignmentMode = .left
+        scoreLabel.position = CGPoint(x: 16, y: 16)
+        scoreLabel.zPosition = 2
+        addChild(scoreLabel)
+    }
+    
     func loadLevel() {
-        guard let levelURL = Bundle.main.url(forResource: "level1", withExtension: "txt") else {
-            fatalError("Could not find level1.txt in the app bundle.")
+        // Challenge 2:
+        guard let levelURL = Bundle.main.url(forResource: "level\(currentLevel)", withExtension: "txt") else {
+            fatalError("Could not find level scheme file in the app bundle.")
         }
         guard let levelString = try? String(contentsOf: levelURL) else {
-            fatalError("Could not load level1.txt from the app bundle.")
+            fatalError("Could not find level scheme file in the app bundle.")
         }
         
         let lines = levelString.components(separatedBy: "\n")
@@ -110,16 +119,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 // Challenge 1:
                 if letter == "x" {
-                    createBlock()
+                    createBlock(position)
                     
                 } else if letter == "v" {
-                    createVortex()
+                    createVortex(position)
                     
                 } else if letter == "s" {
-                    createStar()
+                    createStar(position)
                     
                 } else if letter == "f" {
-                    createFinish()
+                    createFinish(position)
                     
                 } else if letter == " " {
                     // this is an empty space - do nothing
@@ -132,7 +141,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     // Challenge 1:
-    func createBlock() {
+    func createBlock(_ position: CGPoint) {
         let node = SKSpriteNode(imageNamed: "block")
         node.position = position
         
@@ -142,7 +151,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(node)
     }
     
-    func createVortex() {
+    func createVortex(_ position: CGPoint) {
         let node = SKSpriteNode(imageNamed: "vortex")
         node.name = "vortex"
         node.position = position
@@ -156,7 +165,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(node)
     }
     
-    func createStar() {
+    func createStar(_ position: CGPoint) {
         let node = SKSpriteNode(imageNamed: "star")
         node.name = "star"
         node.physicsBody = SKPhysicsBody(circleOfRadius: node.size.width / 2)
@@ -169,7 +178,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(node)
     }
     
-    func createFinish() {
+    func createFinish(_ position: CGPoint) {
         let node = SKSpriteNode(imageNamed: "finish")
         node.name = "finish"
         node.physicsBody = SKPhysicsBody(circleOfRadius: node.size.width / 2)
@@ -226,7 +235,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             node.removeFromParent()
             score += 1
         } else if node.name == "finish" {
-            // next level?
+            // Challenge 2:
+            removeAllChildren()
+            setEnvironment()
+            currentLevel += 1
+            loadLevel()
+            createPlayer()
         }
     }
 }
