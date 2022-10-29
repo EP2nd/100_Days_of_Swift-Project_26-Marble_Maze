@@ -22,6 +22,7 @@
 		B85E58DD290C8E9600229C9C /* player@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B85E58D6290C8E9500229C9C /* player@2x.png */; };
 		B85E58DE290C8E9600229C9C /* level1.txt in Resources */ = {isa = PBXBuildFile; fileRef = B85E58D7290C8E9600229C9C /* level1.txt */; };
 		B8B3616F290D7C0600E7F994 /* level2.txt in Resources */ = {isa = PBXBuildFile; fileRef = B8B3616E290D7C0600E7F994 /* level2.txt */; };
+		B8B36175290D90E000E7F994 /* portal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B8B36174290D90E000E7F994 /* portal@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		B85E58D6290C8E9500229C9C /* player@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "player@2x.png"; sourceTree = "<group>"; };
 		B85E58D7290C8E9600229C9C /* level1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = level1.txt; sourceTree = "<group>"; };
 		B8B3616E290D7C0600E7F994 /* level2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = level2.txt; sourceTree = "<group>"; };
+		B8B36174290D90E000E7F994 /* portal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "portal@2x.png"; path = "../../../../../../../Desktop/portal@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +86,7 @@
 				B85E58D1290C8E9500229C9C /* block@2x.png */,
 				B85E58D3290C8E9500229C9C /* finish@2x.png */,
 				B85E58D6290C8E9500229C9C /* player@2x.png */,
+				B8B36174290D90E000E7F994 /* portal@2x.png */,
 				B85E58D4290C8E9500229C9C /* star@2x.png */,
 				B85E58D2290C8E9500229C9C /* vortex@2x.png */,
 				B85E58D7290C8E9600229C9C /* level1.txt */,
@@ -157,6 +160,7 @@
 				B85E58DD290C8E9600229C9C /* player@2x.png in Resources */,
 				B85E58DA290C8E9600229C9C /* finish@2x.png in Resources */,
 				B85E58D9290C8E9600229C9C /* vortex@2x.png in Resources */,
+				B8B36175290D90E000E7F994 /* portal@2x.png in Resources */,
 				B85E58BD290C8DB700229C9C /* GameScene.sks in Resources */,
 				B85E58C8290C8DBA00229C9C /* Assets.xcassets in Resources */,
 				B85E58DC290C8E9600229C9C /* background@2x.jpg in Resources */,

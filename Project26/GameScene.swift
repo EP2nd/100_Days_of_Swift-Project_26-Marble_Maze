@@ -15,13 +15,17 @@ enum CollisionTypes: UInt32 {
     case star = 4
     case vortex = 8
     case finish = 16
+    // Challenge 3:
+    case portal = 32
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var player: SKSpriteNode!
-    // Hack for the possibility of testing in a simulator:
+    // Challenge 3:
+    var exitPortal: SKSpriteNode!
     
+    // Hack for the possibility of testing in a simulator:
     var lastTouchPosition: CGPoint?
     
     var motionManager: CMMotionManager!
@@ -36,15 +40,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var isGameOver = false
     // Challenge 2:
     var currentLevel = 1
+    // Challenge 3:
+    var playersInitialPosition = CGPoint(x: 96, y: 672)
     
     override func didMove(to view: SKView) {
+        // Challenge 2:
         setEnvironment()
         
         physicsWorld.gravity = .zero
         physicsWorld.contactDelegate = self
         
+        // Challenge 2:
         loadLevel()
-        createPlayer()
+        createPlayer(playersInitialPosition)
         
         motionManager = CMMotionManager()
         motionManager.startAccelerometerUpdates()
@@ -85,6 +93,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         #endif
     }
     
+    // Challenge 2:
     func setEnvironment() {
         let background = SKSpriteNode(imageNamed: "background.jpg")
         background.name = "background"
@@ -129,6 +138,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     
                 } else if letter == "f" {
                     createFinish(position)
+                    
+                // Challenge 3:
+                } else if letter == "i" {
+                    createEntryPortal(position)
+                    
+                // Challenge 3:
+                } else if letter == "o" {
+                    createExitPortal(position)
                     
                 } else if letter == " " {
                     // this is an empty space - do nothing
@@ -191,9 +208,39 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(node)
     }
     
-    func createPlayer() {
+    // Challenge 3:
+    func createEntryPortal(_ position: CGPoint) {
+        let node = SKSpriteNode(imageNamed: "portal")
+        node.name = "entrance"
+        node.run(SKAction.repeatForever(SKAction.rotate(byAngle: .pi, duration: 0.0001)))
+        node.physicsBody = SKPhysicsBody(circleOfRadius: node.size.width / 2)
+        node.physicsBody?.isDynamic = false
+        
+        node.physicsBody?.categoryBitMask = CollisionTypes.portal.rawValue
+        node.physicsBody?.contactTestBitMask = CollisionTypes.player.rawValue
+        node.physicsBody?.collisionBitMask = 0
+        node.position = position
+        addChild(node)
+    }
+    
+    // Challenge 3:
+    func createExitPortal(_ position: CGPoint) {
+        exitPortal = SKSpriteNode(imageNamed: "portal")
+        exitPortal.name = "exit"
+        exitPortal.run(SKAction.repeatForever(SKAction.rotate(byAngle: .pi, duration: 0.0001)))
+        exitPortal.physicsBody = SKPhysicsBody(circleOfRadius: exitPortal.size.width / 2)
+        exitPortal.physicsBody?.isDynamic = false
+        
+        exitPortal.physicsBody?.categoryBitMask = CollisionTypes.portal.rawValue
+        exitPortal.physicsBody?.contactTestBitMask = CollisionTypes.player.rawValue
+        exitPortal.physicsBody?.collisionBitMask = 0
+        exitPortal.position = position
+        addChild(exitPortal)
+    }
+    
+    func createPlayer(_ location: CGPoint) {
         player = SKSpriteNode(imageNamed: "player")
-        player.position = CGPoint(x: 96, y: 672)
+        player.position = location
         player.zPosition = 1
         player.physicsBody = SKPhysicsBody(circleOfRadius: player.size.width / 2)
         player.physicsBody?.allowsRotation = false
@@ -228,7 +275,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let sequence = SKAction.sequence([move, scale ,remove])
             
             player.run(sequence) { [weak self] in
-                self?.createPlayer()
+                self?.createPlayer(self!.playersInitialPosition)
                 self?.isGameOver = false
             }
         } else if node.name == "star" {
@@ -240,7 +287,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             setEnvironment()
             currentLevel += 1
             loadLevel()
-            createPlayer()
+            createPlayer(playersInitialPosition)
+        // Challenge 3:
+        } else if node.name == "entrance" {
+            player.removeFromParent()
+            createPlayer(exitPortal.position)
         }
     }
 }
